@@ -1,5 +1,8 @@
 /* eslint-disable no-unused-vars */
 require('dotenv').config();
+
+const bcrypt = require('bcrypt');
+
 const ProfessionalRepository = require('../repositories/ProfessonalRepository');
 
 class ProfessionalController {
@@ -20,43 +23,21 @@ class ProfessionalController {
   }
 
   async store(req, res) {
-    // const {
-    //   idclinic,
-    //   idemployee,
-    //   idpatient,
-    //     event_,
-    //     name_employee,
-    //     name_patient,
-    //     phone,
-    //     status_,
-    //     confirmation,
-    //     date,
-    //   } = req.body;
+    const {
+      email,
+      password,
+    } = req.body;
 
-    //   const id_clinica = idclinic;
-    //   const id_especialista = idemployee;
-    //   const id_paciente = idpatient;
-    //   const evento = event_;
-    //   const nome_especialista = name_employee;
-    //   const nome_paciente = name_patient;
-    //   const telefone = phone;
-    //   const recebimento = status_;
-    //   const confirmar = confirmation;
-    //   const data = date;
+    const salt = await bcrypt.genSalt(10);
+    const hashPassword = await bcrypt.hash(password, salt);
+    console.log(email);
+    console.log(hashPassword);
 
-    //   const agendamento = await AgendamentosRepository.create({
-    //     id_clinica,
-    //     id_especialista,
-    //     id_paciente,
-    //     evento,
-    //     nome_especialista,
-    //     nome_paciente,
-    //     telefone,
-    //     recebimento,
-    //     confirmar,
-    //     data,
-    //   });
-    //   res.json(agendamento);
+    // const cliente = await ProfessionalRepository.create({
+    //   email,
+    //   hashPassword,
+    // });
+    res.json('cliente');
   }
 }
 

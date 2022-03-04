@@ -25,17 +25,36 @@ class AuthorizationController {
   async Oauth(req, res) {
     const { query } = req;
     const requestToken = query.code;
-    axios({
+    let accessToken = 'null';
+    await axios({
       method: 'post',
       url: `https://github.com/login/oauth/access_token?client_id=${clientID}&client_secret=${clientSecret}&code=${requestToken}`,
       headers: {
         accept: 'application/json',
       },
     }).then((response) => {
-      const accessToken = response.data.access_token;
-      console.log(accessToken);
-      res.json(accessToken);
+      accessToken = response.data.access_token;
+      console.log(accessToken, 'githubtoken');
+      // res.json(accessToken);
     });
+    if (accessToken !== 'null') {
+      console.log('if');
+      axios({
+        method: 'get',
+        url: 'https://api.github.com/user',
+        headers: {
+          Authorization: `token ${accessToken}`,
+        },
+      }).then((response) => {
+        console.log(response.data, 'github');
+        // res.json(response.data);
+        const { email } = response.data;
+        res.redirect(`http://localhost:3001/?email=${email}`);
+        // accessToken = response.data.access_token;
+        // console.log(accessToken, 'githubtoken');
+        // res.json(accessToken);
+      });
+    }
   }
 }
 
