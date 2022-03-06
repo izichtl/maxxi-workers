@@ -1,10 +1,27 @@
-// const db = require('../../database');
+const db = require('../database/index');
 
 class AgendamentosRepository {
   async findAll() {
-    // const rows = await db.query('SELECT * FROM nome_tabela');
-    // return rows;
-    return 'into db';
+    const rows = await db.query('SELECT * FROM users');
+    return rows;
+  }
+
+  async create({
+    email,
+    hashPassword,
+  }) {
+    const [row] = await db.query(`
+      INSERT INTO users(
+        email,
+        password
+        ) 
+      VALUES ($1, $2)
+      RETURNING *
+      `, [
+      email,
+      hashPassword,
+    ]);
+    return row;
   }
 
   //   async findByID({
