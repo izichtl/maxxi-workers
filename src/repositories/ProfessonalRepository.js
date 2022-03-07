@@ -2,43 +2,81 @@ const db = require('../database/index');
 
 class AgendamentosRepository {
   async findAll() {
-    const rows = await db.query('SELECT * FROM users');
+    const rows = await db.query('SELECT * FROM professional');
     return rows;
   }
 
   async create({
+    nome,
+    telefone,
     email,
-    hashPassword,
+    tipoprofissional,
+    situacao,
   }) {
     const [row] = await db.query(`
-      INSERT INTO users(
+      INSERT INTO professional(
+        nome,
+        telefone,
         email,
-        password
+        tipoprofissional,
+        situacao
         ) 
-      VALUES ($1, $2)
+      VALUES ($1, $2, $3, $4, $5)
       RETURNING *
       `, [
+      nome,
+      telefone,
       email,
-      hashPassword,
+      tipoprofissional,
+      situacao,
     ]);
     return row;
   }
 
-  //   async findByID({
-  //     id,
-  //   }) {
-  //     const rows = await db.query(`SELECT * FROM nome_tabela
-  //     WHERE nome_tabela.id = $1`, [id]);
-  //     return rows;
-  //   })
+  async update(id,
+    {
+      nome,
+      telefone,
+      email,
+      tipoprofissional,
+      situacao,
+    }) {
+    const [row] = await db.query(`
+      UPDATE professional
+      SET
+      nome = $2,
+      telefone = $3,
+      email = $4,
+      tipoprofissional = $5,
+      situacao = $6
+      WHERE id = $1
+      RETURNING *
+      `, [
+      id,
+      nome,
+      telefone,
+      email,
+      tipoprofissional,
+      situacao]);
 
-  //   async delete(
-  //     id,
-  //   ) {
-  //     const rows = await db.query(`DELETE FROM nome_tabela
-  //     WHERE agendamentos.id = $1`, [id]);
-  //     return rows;
-  //   }
+    return row;
+  }
+
+  async findByID({
+    id,
+  }) {
+    const rows = await db.query(`SELECT * FROM professional
+    WHERE professional.id = $1`, [id]);
+    return rows;
+  }
+
+  async delete(
+    id,
+  ) {
+    const rows = await db.query(`DELETE FROM professional
+    WHERE professional.id = $1`, [id]);
+    return rows;
+  }
 }
 
 module.exports = new AgendamentosRepository();

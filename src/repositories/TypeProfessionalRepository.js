@@ -1,6 +1,6 @@
 const db = require('../database/index');
 
-class AgendamentosRepository {
+class TypeProfessionalRepository {
   async findAll() {
     const rows = await db.query('SELECT * FROM professionaltypes');
     return rows;
@@ -10,8 +10,6 @@ class AgendamentosRepository {
     descricao,
     situacao,
   }) {
-    console.log(descricao);
-    console.log(situacao);
     const [row] = await db.query(`
       INSERT INTO professionaltypes(
         descricao,
@@ -31,9 +29,6 @@ class AgendamentosRepository {
       descricao,
       situacao,
     }) {
-    console.log(id);
-    console.log(descricao);
-    console.log(situacao);
     const [row] = await db.query(`
       UPDATE professionaltypes
       SET
@@ -58,11 +53,10 @@ class AgendamentosRepository {
     id,
   ) {
     console.log(id);
-    return 'okD';
-    // const rows = await db.query(`DELETE FROM professionaltypes
-    // WHERE professionaltypes.id = $1`, [id]);
-    // return rows;
+    const rows = await db.query(`DELETE FROM professionaltypes
+    WHERE professionaltypes.id = $1`, [id]);
+    return rows;
   }
 }
 
-module.exports = new AgendamentosRepository();
+module.exports = new TypeProfessionalRepository();

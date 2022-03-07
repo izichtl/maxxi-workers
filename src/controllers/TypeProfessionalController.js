@@ -41,9 +41,9 @@ class TypeProfessionalController {
     const {
       id,
     } = req.body;
-    console.log(id);
+    console.log(id, 'delete');
 
-    const type = await TypeProfessionalRepository.create(
+    const type = await TypeProfessionalRepository.delete(
       id,
     );
     res.json(type);

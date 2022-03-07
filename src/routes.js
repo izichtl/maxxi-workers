@@ -19,10 +19,16 @@ router.get('/', (req, res) => {
 });
 
 router.get('/professional', ProfessionalController.index);
+router.get('/professional/:id', ProfessionalController.findById);
+router.post('/professional', ProfessionalController.store);
+router.put('/professional/:id', ProfessionalController.update);
+router.delete('/professional', ProfessionalController.delete);
+
 router.get('/type', TypeProfessionalController.index);
 router.post('/type', TypeProfessionalController.store);
 router.put('/type', TypeProfessionalController.update);
 router.delete('/type', TypeProfessionalController.delete);
+
 router.get('/token', AuthorizationController.getToken);
 router.get('/oauth/redirect', AuthorizationController.Oauth);
 
