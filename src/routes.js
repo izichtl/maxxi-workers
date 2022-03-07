@@ -1,35 +1,30 @@
-/* eslint-disable no-unused-vars */
 const { Router } = require('express');
+
+const Login = require('./middlewares/login');
 
 const router = Router();
 
 const TypeProfessionalController = require('./controllers/TypeProfessionalController');
+const UsersController = require('./controllers/UsersController');
 const ProfessionalController = require('./controllers/ProfessionalController');
 const AuthorizationController = require('./controllers/AuthorizationController');
 
-router.get('/', (req, res) => {
-  const {
-    query,
-    email,
-  } = req.params;
-  console.log(req.query.email);
-  console.log(req.body);
-  console.log(req.url);
-  res.send('homepage');
-});
+// Rotas abertas.
+router.post('/user', UsersController.store);
+router.post('/login', AuthorizationController.login);
 
-router.get('/professional', ProfessionalController.index);
-router.get('/professional/:id', ProfessionalController.findById);
-router.post('/professional', ProfessionalController.store);
-router.put('/professional/:id', ProfessionalController.update);
-router.delete('/professional', ProfessionalController.delete);
+// Rotas protegidas.
+router.get('/user', Login, UsersController.index);
 
-router.get('/type', TypeProfessionalController.index);
-router.post('/type', TypeProfessionalController.store);
-router.put('/type', TypeProfessionalController.update);
-router.delete('/type', TypeProfessionalController.delete);
+router.get('/professional', Login, ProfessionalController.index);
+router.get('/professional/:id', Login, ProfessionalController.findById);
+router.post('/professional', Login, ProfessionalController.store);
+router.put('/professional/:id', Login, ProfessionalController.update);
+router.delete('/professional', Login, ProfessionalController.delete);
 
-router.get('/token', AuthorizationController.getToken);
-router.get('/oauth/redirect', AuthorizationController.Oauth);
+router.get('/type', Login, TypeProfessionalController.index);
+router.post('/type', Login, TypeProfessionalController.store);
+router.put('/type', Login, TypeProfessionalController.update);
+router.delete('/type', Login, TypeProfessionalController.delete);
 
 module.exports = router;

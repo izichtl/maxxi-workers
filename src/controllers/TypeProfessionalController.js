@@ -11,24 +11,12 @@ class TypeProfessionalController {
     res.json(typeprofessional);
   }
 
-  async selectById(req, res) {
-    // const {
-    //   id,
-    // } = req.body;
-
-    // const agendamento = await AgendamentosRepository.findById({
-    //   id,
-    // });
-    // res.json(agendamento);
-  }
-
   async store(req, res) {
     const {
       descricao,
       situacao,
     } = req.body;
-    console.log(descricao);
-    console.log(situacao);
+    if (descricao === undefined || situacao === undefined) return res.status(400).json({ error: 'Por favor, verifique todos os campos' });
 
     const type = await TypeProfessionalRepository.create({
       descricao,
@@ -41,7 +29,6 @@ class TypeProfessionalController {
     const {
       id,
     } = req.body;
-    console.log(id, 'delete');
 
     const type = await TypeProfessionalRepository.delete(
       id,
@@ -55,9 +42,6 @@ class TypeProfessionalController {
       descricao,
       situacao,
     } = req.body;
-    console.log(id);
-    console.log(descricao);
-    console.log(situacao);
 
     const type = await TypeProfessionalRepository.update(id, {
       descricao,

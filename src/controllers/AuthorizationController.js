@@ -1,66 +1,25 @@
-/* eslint-disable no-unused-vars */
 require('dotenv').config();
-const jwt = require('jsonwebtoken');
-const axios = require('axios');
-const ProfessionalRepository = require('../repositories/ProfessonalRepository');
 
-const clientID = '20a70bf43019f5229a00';
-const clientSecret = 'd7ba5dea59e4b8ba94fa3ce50e4250b5ae52c7b8';
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+const UsersRepository = require('../repositories/UsersRepository');
+
+const key = process.env.CHAVE_CLIENT;
 
 class AuthorizationController {
-  async getToken(req, res) {
-    console.log('pass');
-    const id = '19ac9be6-86ad-479a-93ef-433019095786';
-    const key = process.env.CHAVE_CLIENT;
-    const time = 60 * 4 * 7;
+  async login(req, res) {
+    const { email, password } = req.body;
+    const user = await UsersRepository.findByEmail({ email });
+    if (!user) return res.status(400).json({ error: 'Usuário não encontrado' });
+    const validPassword = await bcrypt.compare(password, user.password);
+    if (!validPassword) return res.status(400).json({ error: 'Senha incorreta, por favor tente novamente' });
+    const time = 60 * 4 * 70;
     const token = jwt.sign({
-      id,
-    },
-    key,
-    { algorithm: 'HS256', expiresIn: time });
-    console.log(token);
-    res.json({ token });
-  }
-
-  async Oauth(req, res) {
-    const { query } = req;
-    const requestToken = query.code;
-    let accessToken = 'null';
-    await axios({
-      method: 'post',
-      url: `https://github.com/login/oauth/access_token?client_id=${clientID}&client_secret=${clientSecret}&code=${requestToken}`,
-      headers: {
-        accept: 'application/json',
-      },
-    }).then((response) => {
-      accessToken = response.data.access_token;
-      console.log(accessToken, 'githubtoken');
-      // res.json(accessToken);
-    });
-    if (accessToken !== 'null') {
-      console.log('if');
-      axios({
-        method: 'get',
-        url: 'https://api.github.com/user',
-        headers: {
-          Authorization: `token ${accessToken}`,
-        },
-      }).then((response) => {
-        console.log(response.data, 'github');
-        // res.json(response.data);
-        const { email } = response.data;
-        res.redirect(`http://localhost:3001/?email=${email}`);
-        // accessToken = response.data.access_token;
-        // console.log(accessToken, 'githubtoken');
-        // res.json(accessToken);
-      });
-    }
+      id: user.id,
+      email: user.email,
+    }, key, { algorithm: 'HS256', expiresIn: time });
+    return res.json(token);
   }
 }
 
 module.exports = new AuthorizationController();
-
-// const salt = await bcrypt.genSalt(10);
-// const hashPassword = await bcrypt.hash(password, salt);
-// console.log(email);
-// console.log(hashPassword);
