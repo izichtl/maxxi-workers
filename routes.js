@@ -1,13 +1,13 @@
 const { Router } = require('express');
 
-const Login = require('./middlewares/login');
+const Login = require('./src/middlewares/login');
 
 const router = Router();
 
-const TypeProfessionalController = require('./controllers/TypeProfessionalController');
-const UsersController = require('./controllers/UsersController');
-const ProfessionalController = require('./controllers/ProfessionalController');
-const AuthorizationController = require('./controllers/AuthorizationController');
+const TypeProfessionalController = require('./src/controllers/TypeProfessionalController');
+const UsersController = require('./src/controllers/UsersController');
+const ProfessionalController = require('./src/controllers/ProfessionalController');
+const AuthorizationController = require('./src/controllers/AuthorizationController');
 
 // Rotas abertas.
 router.post('/user', UsersController.store);
