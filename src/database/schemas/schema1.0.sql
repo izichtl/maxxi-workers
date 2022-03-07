@@ -61,7 +61,7 @@ CREATE TABLE professional (
   id UUID UNIQUE PRIMARY KEY NOT NULL DEFAULT uuid_generate_v4(),
   nome VARCHAR NOT NULL,
   telefone VARCHAR NOT NULL,
-  email VARCHAR NOT NULL,
+  email VARCHAR,
   tipoprofissional UUID,
   situacao BOOLEAN NOT NULL,
   updatedAt TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -77,3 +77,6 @@ CREATE TRIGGER set_timestamp
 BEFORE UPDATE ON professional
 FOR EACH ROW
 EXECUTE PROCEDURE trigger_set_timestamp();
+
+
+ALTER TABLE professional ALTER COLUMN email VARCHAR,
