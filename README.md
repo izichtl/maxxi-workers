@@ -1,2 +1,2 @@
 # maxxi-workers
-back-end nodejs para aplicação teste
+Back-end para aplicação teste de cadastro de profissionais. 
